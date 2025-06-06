@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ventas</title>
+    
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .header {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 3px solid #007bff;
+        }
+        
+        .cliente-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .cliente-datos {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .cliente-datos p {
+            margin: 5px 0;
+            padding: 8px 15px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .formulario-venta {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40,167,69,0.4);
+        }
+        
+        .btn-cancel {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .btn-cancel:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108,117,125,0.4);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 10px 25px;
+            text-decoration: none;
+            border-radius: 20px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            padding: 10px 25px;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108,117,125,0.4);
+        }
+        
+        .historial-compras {
+            margin-top: 30px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table thead th {
+            background: linear-gradient(45deg, #343a40, #495057);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+        
+        .resumen-total {
+            text-align: right;
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .resumen-total h4 {
+            color: #007bff;
+            font-weight: 700;
+        }
+        
+        .navegacion {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .no-data {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 40px;
+        }
+        
+        .mensaje {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #d4edda, #c3e6cb);
+            border-left: 4px solid #28a745;
+            color: #155724;
+            font-weight: 500;
+        }
+        
+        .total-display {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #007bff;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="header">Sistema de Ventas</h2>
+        
+        <!-- Información del Cliente -->
+        <div class="cliente-info">
+            <h3><i class="fas fa-user"></i> Información del Cliente</h3>
+            <div class="cliente-datos">
+                <p><strong>ID:</strong> {{ cliente[0] if cliente else 'N/A' }}</p>
+                <p><strong>Nombre:</strong> {{ cliente[1] if cliente else 'N/A' }}</p>
+                <p><strong>NIT:</strong> {{ cliente[2] if cliente else 'N/A' }}</p>
+            </div>
+        </div>
+
+        <!-- Mensaje de estado -->
+        {% if mensaje %}
+        <div class="mensaje">
+            {{ mensaje }}
+        </div>
+        {% endif %}
+
+        <!-- Formulario de Venta -->
+        <div class="formulario-venta">
+            <h3><i class="fas fa-shopping-cart"></i> Nueva Venta</h3>
+            <form method="post" action="/procesar_venta" id="ventaForm">
+                <input type="hidden" name="cliente_id" value="{{ cliente[0] if cliente else '' }}">
+                
+                <div class="form-group">
+                    <label for="producto"><i class="fas fa-box"></i> Producto:</label>
+                    <select name="producto_id" id="producto" class="form-control" required>
+                        <option value="">Seleccionar producto...</option>
+                        {% if productos %}
+                            {% for producto in productos %}
+                            <option value="{{ producto[0] }}" data-precio="{{ producto[2] }}">
+                                {{ producto[1] }} - Bs. {{ producto[2] }}
+                            </option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="">No hay productos disponibles</option>
+                        {% endif %}
+                    </select>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="cantidad"><i class="fas fa-sort-numeric-up"></i> Cantidad:</label>
+                            <input type="number" name="cantidad" id="cantidad" class="form-control" 
+                                   min="1" value="1" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="precio_unitario"><i class="fas fa-dollar-sign"></i> Precio Unitario (Bs.):</label>
+                            <input type="number" name="precio_unitario" id="precio_unitario" 
+                                   class="form-control" step="0.01" min="0" readonly>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="total"><i class="fas fa-calculator"></i> Total (Bs.):</label>
+                    <input type="number" name="total" id="total" 
+                           class="form-control total-display" step="0.01" min="0" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fecha_venta"><i class="fas fa-calendar"></i> Fecha de Venta:</label>
+                    <input type="date" name="fecha_venta" id="fecha_venta" class="form-control"
+                           value="{{ fecha_actual }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="observaciones"><i class="fas fa-sticky-note"></i> Observaciones:</label>
+                    <textarea name="observaciones" id="observaciones" class="form-control"
+                              rows="3" placeholder="Observaciones adicionales..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <input type="submit" value="Procesar Venta" class="btn-submit">
+                    <a href="/" class="btn-cancel">Cancelar</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Historial de Compras del Cliente -->
+        <div class="historial-compras">
+            <h3><i class="fas fa-history"></i> Historial de Compras</h3>
+            {% if compras %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Total</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for compra in compras %}
+                        <tr>
+                            <td>{{ compra[1] }}</td>
+                            <td>{{ compra[2] }}</td>
+                            <td>{{ compra[3] }}</td>
+                            <td>Bs. {{ "%.2f"|format(compra[4]) }}</td>
+                            <td>Bs. {{ "%.2f"|format(compra[5]) }}</td>
+                            <td>{{ compra[6] if compra[6] else '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <!-- Resumen Total -->
+                <div class="resumen-total">
+                    <h4>Total Compras: Bs. {{ "%.2f"|format(total_compras) if total_compras else '0.00' }}</h4>
+                </div>
+            </div>
+            {% else %}
+            <p class="no-data">Este cliente no tiene compras registradas.</p>
+            {% endif %}
+        </div>
+
+        <!-- Botones de Navegación -->
+        <div class="navegacion">
+            <a href="/" class="btn-primary">Volver a Clientes</a>
+            {% if cliente %}
+            <a href="/vercompras/{{ cliente[0] }}" class="btn-secondary">Ver Todas las Compras</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Calcular total automáticamente
+            function calcularTotal() {
+                var precio = parseFloat($('#precio_unitario').val()) || 0;
+                var cantidad = parseInt($('#cantidad').val()) || 0;
+                var total = precio * cantidad;
+                $('#total').val(total.toFixed(2));
+                
+                // Actualizar visualización del total
+                if (total > 0) {
+                    $('#total').removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $('#total').removeClass('is-valid').addClass('is-invalid');
+                }
+            }
+
+            // Cuando se selecciona un producto
+            $('#producto').change(function() {
+                var precio = $(this).find('option:selected').data('precio');
+                $('#precio_unitario').val(precio || 0);
+                calcularTotal();
+                
+                if (precio) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                }
+            });
+
+            // Cuando cambia la cantidad
+            $('#cantidad').on('input', function() {
+                var cantidad = parseInt($(this).val());
+                if (cantidad > 0) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                }
+                calcularTotal();
+            });
+
+            // Validación del formulario
+            $('#ventaForm').submit(function(e) {
+                var total = parseFloat($('#total').val()) || 0;
+                var producto = $('#producto').val();
+                var cantidad = parseInt($('#cantidad').val()) || 0;
+                
+                // Validaciones
+                if (!producto) {
+                    alert('Por favor selecciona un producto');
+                    $('#producto').focus();
+                    e.preventDefault();
+                    return false;
+                }
+                
+                if (cantidad <= 0) {
+                    alert('La cantidad debe ser mayor a 0');
+                    $('#cantidad').focus();
+                    e.preventDefault();
+                    return false;
+                }
+                
+                if (total <= 0) {
+                    alert('El total debe ser mayor a 0');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Confirmación
+                var nombreProducto = $('#producto option:selected').text();
+                var confirmMessage = `¿Confirmar la venta?\n\nProducto: ${nombreProducto}\nCantidad: ${cantidad}\nTotal: Bs. ${total.toFixed(2)}`;
+                
+                if (!confirm(confirmMessage)) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Mostrar loading
+                $(this).find('.btn-submit').prop('disabled', true).val('Procesando...');
+            });
+
+            // Validación en tiempo real
+            $('.form-control').on('blur', function() {
+                if ($(this).prop('required') && !$(this).val()) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                }
+            });
+
+            // Inicializar validaciones
+            calcularTotal();
+        });
+    </script>
+</body>
+</html>

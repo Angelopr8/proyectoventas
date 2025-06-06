@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Cliente - Sistema de Ventas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+            margin: 20px;
+        }
+        
+        .form-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .form-header i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .form-body {
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-label {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            outline: none;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            margin-top: 12px;
+        }
+        
+        .btn-update {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: 100%;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .btn-update:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-cancel {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: 100%;
+            color: white;
+            font-size: 1rem;
+            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .client-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .client-info h6 {
+            color: #495057;
+            margin: 0 0 5px 0;
+            font-weight: 600;
+        }
+        
+        .client-info small {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <i class="fas fa-user-edit"></i>
+            <h3>Actualizar Cliente</h3>
+            <p>Modifica los datos del cliente</p>
+        </div>
+        
+        <div class="form-body">
+            <!-- Información del cliente actual -->
+            <div class="client-info">
+                <h6><i class="fas fa-info-circle"></i> Cliente ID: <span id="clientId">{{dato[0] if dato else 'N/A'}}</span></h6>
+                <small>Modifica los campos necesarios y presiona actualizar</small>
+            </div>
+            
+            <form method="POST" action="/actualizar_cliente" id="updateForm">
+                <!-- Campo oculto para el ID -->
+                <input type="hidden" name="txtid" value="{{dato[0] if dato else ''}}">
+                
+                <div class="form-group">
+                    <label for="nombre" class="form-label">
+                        <i class="fas fa-user"></i> Nombre del Cliente
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="nombre" 
+                           name="txtnombre" 
+                           value="{{dato[1] if dato else ''}}" 
+                           placeholder="Ingrese el nombre completo"
+                           required>
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nit" class="form-label">
+                        <i class="fas fa-id-card"></i> NIT / CI
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="nit" 
+                           name="txtnit" 
+                           value="{{dato[2] if dato else ''}}" 
+                           placeholder="Ingrese el NIT o CI"
+                           required>
+                    <i class="fas fa-id-card input-icon"></i>
+                </div>
+                
+                <button type="submit" class="btn btn-update">
+                    <i class="fas fa-save"></i>
+                    Actualizar Cliente
+                </button>
+                
+                <a href="/clientes" class="btn-cancel">
+                    <i class="fas fa-arrow-left"></i>
+                    Cancelar y Volver
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Validación del formulario
+        document.getElementById('updateForm').addEventListener('submit', function(e) {
+            const nombre = document.getElementById('nombre').value.trim();
+            const nit = document.getElementById('nit').value.trim();
+            
+            if (!nombre) {
+                e.preventDefault();
+                alert('Por favor, ingrese el nombre del cliente');
+                document.getElementById('nombre').focus();
+                return;
+            }
+            
+            if (!nit) {
+                e.preventDefault();
+                alert('Por favor, ingrese el NIT o CI');
+                document.getElementById('nit').focus();
+                return;
+            }
+            
+            // Confirmación antes de actualizar
+            if (!confirm('¿Está seguro de que desea actualizar los datos de este cliente?')) {
+                e.preventDefault();
+            }
+        });
+        
+        // Animación de enfoque en los campos
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+                this.parentElement.style.transition = 'transform 0.3s ease';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
+ 
+ 
+ 

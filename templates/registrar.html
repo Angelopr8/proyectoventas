@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Cliente</title>
+    
+    <!-- Bootstrap CSS local -->
+    <link rel="stylesheet" href="../static/bootstrap.min.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="../static/estilos.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Agregar esta navbar al inicio de tu registrar.html, después del <body> -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-store"></i>
+            Sistema de Ventas
+        </a>
+        
+        <div class="navbar-nav ms-auto">
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-user"></i>
+                    {{ session.usuario_nombre or 'Usuario' }}
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesión
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- También puedes agregar un botón simple sin dropdown -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Sistema de Ventas</h2>
+    <div>
+        <span class="me-3">Bienvenido: <strong>{{ session.usuario_nombre or 'Usuario' }}</strong></span>
+        <a href="/logout" class="btn btn-outline-danger btn-sm">
+            <i class="fas fa-sign-out-alt"></i>
+            Cerrar Sesión
+        </a>
+    </div>
+</div>
+    <!-- Modal para Registro -->
+    <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="registroLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registroLabel">Nuevo Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="contenido-modal">
+                    <!-- Aquí se cargará el formulario con AJAX -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="header">{{mensaje}}</h2>
+
+        <!-- Formulario de búsqueda -->
+        <div class="contenidoBuscar">
+            <div class="buscar">
+                <form action="/buscar" method="get">
+                    <input type="text" name="txtbuscar" placeholder="Buscar cliente...">
+                    <input type="submit" value="Buscar">
+                </form>
+            </div>
+        </div>
+
+        <!-- Formulario para registrar/actualizar cliente -->
+        <form action="{% if cliente %}/actualizar{% else %}/insertar{% endif %}" method="POST" class="form">
+            {% if cliente %}
+            <input type="hidden" name="txtid" value="{{ cliente[0] }}">
+            {% endif %}
+            
+            <label for="txtnombre">Nombre:</label>
+            <input type="text" name="txtnombre" id="txtnombre" 
+                   value="{% if cliente %}{{ cliente[1] }}{% endif %}" required>
+
+            <label for="txtnit">NIT:</label>
+            <input type="text" name="txtnit" id="txtnit" 
+                   value="{% if cliente %}{{ cliente[2] }}{% endif %}" required>
+
+            <input type="submit" value="{% if cliente %}Actualizar{% else %}Registrar{% endif %}" class="btn-submit">
+            {% if cliente %}
+            <a href="/" class="btn-cancel">Cancelar</a>
+            {% endif %}
+        </form>
+
+        <!-- Tabla de clientes registrados -->
+        <div class="table-container">
+            {% if clientes %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>NIT</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                    <tr>
+                        <td>{{cliente[0]}}</td>
+                        <td>{{cliente[1]}}</td>
+                        <td>{{cliente[2]}}</td>
+                        <td>
+                            <a href="/actualizar/{{cliente[0]}}">Actualizar</a> |
+                            <a href="/eliminar/{{cliente[0]}}" 
+                               onclick="return confirm('¿Está seguro de eliminar este registro?')">Eliminar</a> |
+                            <a href="/comprar/{{cliente[0]}}">VENTA</a> |
+                            <a href="/vercompras/{{cliente[0]}}">Ver Compras</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No hay clientes registrados.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- jQuery local -->
+    <script src="../static/js/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS local -->
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para el modal -->
+    <script>
+        $(document).ready(function() {
+            $('#modalRegistro').on('show.bs.modal', function () {
+                $('#contenido-modal').load('/registro');
+            });
+        });
+    </script>
+</body>
+</html>
